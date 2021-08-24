@@ -1,0 +1,473 @@
+# modify schema
+    def openModifyDialog(self, row, column):
+        if column == 0:
+            item = self.ui.tableWidget_output.item(row, column)
+            # print(item.text())
+
+
+            qfile_Dialog = QFile('modifySchemaDiag.ui')
+            qfile_Dialog.open(QFile.ReadOnly)
+            qfile_Dialog.close()
+            self.modifyui = QUiLoader().load(qfile_Dialog)
+            self.modifyui.show()
+
+            #self.modifyui.plainTextEdit_currentSchema.setPlainText('{}'.format(item.text()))
+
+            file = open('/Users/yuan/PycharmProjects/DemoQLearningMultimodle/InformationStore/noToAttributeDict.txt',
+                        'r')
+            row = 0
+            for line in file.readlines():
+                line = line.strip()
+                lineArray = line.split(' ')
+                tempString = lineArray[0] + ': ' + lineArray[1]
+                self.modifyui.listWidget_notoAttributes.insertItem(row, tempString)
+                row += 1
+            file.close()
+
+            # toolButton_Execute
+            self.modifyui.toolButton_Execute.clicked.connect(self.executeButton)
+
+            #
+
+
+
+    def executeButton(self):
+        self.newSchema = self.modifyui.plainTextEdit_newSchema.toPlainText()
+
+
+
+        noToAttributeDict = {}
+        attributeToNoDict = {}
+        currentSchema = {}
+
+        #######################
+        ####################### JSON
+        filenames_JSON = []
+        directoryLocation_JSON = self.loadJSONDirectory
+        os.chdir(directoryLocation_JSON)  # The specified directory
+        for i in glob.glob("*.csv"):  # take all .csv files in the specified directory
+            filenames_JSON.append(i[:-4])  # take file name, but does not include ".csv" suffix
+
+        ######## i starts from 1
+        i = 1
+        # iterate files
+        for file_name_JSON in filenames_JSON:
+            noToAttributeDict[
+                i] = file_name_JSON  # {1: 'ns', 2: 'original', 3: 'pageid', 4: 'arrayTable', 5: 'title', 51: 'subject', 52: 'occupation', 53: 'personFunction', 54: 'birthYear', 55: 'birthPlace', 56: 'birthDate', 57: 'title'}
+            attributeToNoDict[file_name_JSON] = i
+            i += 1
+
+        #######################
+        ####################### RDF
+        filenames_RDF = []
+        directoryLocation_RDF = self.loadRDFDirectory
+        os.chdir(directoryLocation_RDF)  # The specified directory
+        for i in glob.glob("*.csv"):  # take all .csv files in the specified directory
+            filenames_RDF.append(i[:-4])  # take file name, but does not include ".csv" suffix
+
+        # i starts from 51 for RDF files
+        i = 51
+        # iterate files
+        for file_name_RDF in filenames_RDF:
+            if file_name_RDF == 'title':
+                noToAttributeDict[i] = 'title_RDF'
+                attributeToNoDict['title_RDF'] = i
+            else:
+                noToAttributeDict[i] = file_name_RDF
+                attributeToNoDict[file_name_RDF] = i
+            i += 1
+
+
+        # currentSchema
+        schamaString = self.newSchema
+        # schamaString ='1 0 2 0 3 0 4 0 5 0 54 0 56 0 58 0 59 0 53 62 0 63 0 55 61 67 70 0 68 76 0 69 0 72 0 74 86 0 51 71 75 79 0 77 0 81 0 82 0 66 78 83 85 0 84 0 87 0 88 0 89 0 65 73 91 0 52 64 90 92 0 57 93 0 95 0 96 0 60 97 0 80 94 98'
+
+        schemaArray = re.split(r'\s[0]\s', schamaString)
+        # ['1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 54 ', ' 56 ', ' 58 ', ' 59 ', ' 53 62 ', ' 63 ', ' 55 61 67 7', ' ', ' 68 76 ', ' 69 ', ' 72 ', ' 74 86 ', ' 51 71 75 79 ', ' 77 ', ' 81 ', ' 82 ', ' 66 78 83 85 ', ' 84 ', ' 87 ', ' 88 ', ' 89 ', ' 65 73 91 ', ' 52 64 9', ' 92 ', ' 57 93 ', ' 95 ', ' 96 ', ' 6', ' 97 ', ' 8', ' 94 98']
+
+
+        i = 0
+        while (i < len(schemaArray)):
+            schemaArray[i] = schemaArray[i].strip()
+            i += 1
+
+        i = 0
+        while (i < len(schemaArray)):
+            actions = schemaArray[i].split(' ')
+            l =[]
+            for a in actions:
+                l.append(int(a))
+            currentSchema[l[0]] = l
+            i+=1
+
+
+
+
+
+
+        # ###################################################################################################
+        # #                                   load relational schema
+        # ###################################################################################################
+        #
+        # # fileSchema = '/Users/yuan/PycharmProjects/QLearningMultimodle/Person_dataset/processed_dataset/experimental result in paper/OptimalTime12.txt'
+        # # fileRead = open(fileSchema, encoding='utf8')
+        # # lines = fileRead.readlines()
+        # # schamaString = lines[6]
+        #
+        # schamaString = self.newSchema
+        # # schamaString ='1 0 2 0 3 0 4 0 5 0 54 0 56 0 58 0 59 0 53 62 0 63 0 55 61 67 70 0 68 76 0 69 0 72 0 74 86 0 51 71 75 79 0 77 0 81 0 82 0 66 78 83 85 0 84 0 87 0 88 0 89 0 65 73 91 0 52 64 90 92 0 57 93 0 95 0 96 0 60 97 0 80 94 98'
+        #
+        # schemaArray = re.split(r'\s[0]\s', schamaString)
+        # # ['1 ', ' 2 ', ' 3 ', ' 4 ', ' 5 ', ' 54 ', ' 56 ', ' 58 ', ' 59 ', ' 53 62 ', ' 63 ', ' 55 61 67 7', ' ', ' 68 76 ', ' 69 ', ' 72 ', ' 74 86 ', ' 51 71 75 79 ', ' 77 ', ' 81 ', ' 82 ', ' 66 78 83 85 ', ' 84 ', ' 87 ', ' 88 ', ' 89 ', ' 65 73 91 ', ' 52 64 9', ' 92 ', ' 57 93 ', ' 95 ', ' 96 ', ' 6', ' 97 ', ' 8', ' 94 98']
+        # # print(schemaArray)
+        #
+        # i = 0
+        # while (i < len(schemaArray)):
+        #     schemaArray[i] = schemaArray[i].strip()
+        #     i += 1
+        #
+        # # ['1', '2', '3', '4', '5', '54', '56', '58', '59', '53 62', '63', '55 61 67 7', '', '68 76', '69', '72', '74 86', '51 71 75 79', '77', '81', '82', '66 78 83 85', '84', '87', '88', '89', '65 73 91', '52 64 9', '92', '57 93', '95', '96', '6', '97', '8', '94 98']
+        # # print(schemaArray)
+        #
+        # # i = 0
+        # # while (i < len(schemaArray)):
+        # #     actions = schemaArray[i].split(' ')
+        # #     if len(actions) > 1:
+        # #         leftIndex = 0
+        # #         rightIndex = 1
+        # #         while (rightIndex < len(actions)):
+        # #
+        # #             if int(actions[leftIndex]) < 50 and int(actions[rightIndex]) < 50:
+        # #                 left = currentTableContent[int(actions[leftIndex])]
+        # #                 right = currentTableContent[int(actions[rightIndex])]
+        # #                 currentTableContent[int(actions[leftIndex])] = pd.merge(left, right, on='objId', how='outer')
+        # #                 # print(">>  currentTableContent", currentTableContent[randomTab])
+        # #
+        # #                 # update current relational schema
+        # #                 currentSchema[int(actions[leftIndex])].extend(currentSchema[int(actions[rightIndex])])
+        # #                 currentSchema[int(actions[leftIndex])].sort()
+        # #                 del currentSchema[int(actions[rightIndex])]
+        # #                 del currentTableContent[int(actions[rightIndex])]
+        # #                 print(">> currentSchema: ", currentSchema)
+        # #
+        # #             if int(actions[leftIndex]) > 50 and int(actions[rightIndex]) > 50:
+        # #                 left = currentTableContent[int(actions[leftIndex])]
+        # #                 right = currentTableContent[int(actions[rightIndex])]
+        # #                 currentTableContent[int(actions[leftIndex])] = pd.merge(left, right, on='key', how='outer')
+        # #                 # print(">>  currentTableContent", currentTableContent[randomTab])
+        # #
+        # #                 # update current relational schema
+        # #                 currentSchema[int(actions[leftIndex])].extend(currentSchema[int(actions[rightIndex])])
+        # #                 currentSchema[int(actions[leftIndex])].sort()
+        # #                 del currentSchema[int(actions[rightIndex])]
+        # #                 del currentTableContent[int(actions[rightIndex])]
+        # #                 print(">> currentSchema: ", currentSchema)
+        # #
+        # #             if (int(actions[leftIndex]) < 50 and int(actions[rightIndex]) > 50) or (
+        # #                     int(actions[leftIndex]) > 50 and int(actions[rightIndex]) < 50):
+        # #                 left = currentTableContent[int(actions[leftIndex])]
+        # #                 right = currentTableContent[int(actions[rightIndex])]
+        # #                 currentTableContent[int(actions[leftIndex])] = pd.merge(left, right, on='title', how='outer')
+        # #                 # print(">>  currentTableContent", currentTableContent[randomTab])
+        # #
+        # #                 # update current relational schema
+        # #                 currentSchema[int(actions[leftIndex])].extend(currentSchema[int(actions[rightIndex])])
+        # #                 currentSchema[int(actions[leftIndex])].sort()
+        # #                 del currentSchema[int(actions[rightIndex])]
+        # #                 del currentTableContent[int(actions[rightIndex])]
+        # #                 print(">> currentSchema: ", currentSchema)
+        # #
+        # #             rightIndex += 1
+        # #     # print(a)
+        # #     i += 1
+
+        # creat connecting
+        conn = MySQLdb.connect(
+            host='localhost',  # your MySQL service address
+            port=3306,  # port
+            user='root',  # visiting database service's user name and password
+            passwd='1',
+            db='QLearning',  # database name
+            charset='utf8mb4'  # for chinese
+        )
+        cur = conn.cursor()
+        # cur.execute("drop database if exists QLearning")
+        # cur.execute("Create database QLearning")
+        # cur.execute("use QLearning")
+        #
+        # engine = create_engine(
+        #     "mysql+pymysql://{}:{}@{}/{}?charset={}".format('root', '1', 'localhost', 'QLearning', 'utf8mb4'))
+        #
+        # for key, value in currentTableContent.items():
+        #     value.to_sql(name=noToAttributeDict[key], con=engine, if_exists='replace', index=False)
+
+
+        #get execute time
+
+        ##################################################################
+        #######################################     query1    #######################################
+        pageidNo_q1 = attributeToNoDict['pageid']
+        # print(pageidNo_q1)
+        wherePageid_q1 = 0
+        for key, value in currentSchema.items():
+            if pageidNo_q1 in value:
+                wherePageid_q1 = key
+                # print(wherePageid_q1)
+                break
+
+        # print(wherePageid_q1)
+
+        pagidTable_q1 = noToAttributeDict[wherePageid_q1]
+
+
+        sql1 = "select pageid from arrayTable, %s where arrayTable.key = 'normalized' and arrayTable.index = 0 and arrayTable.valStr = 'Doris_Brougham' and %s.objId = arrayTable.objId" % (
+        pagidTable_q1, pagidTable_q1)  # Doris_Brougham     Henry_Standing_Bear
+
+        middleTime = []
+        recordEachQueryTime = []
+        for t_i in range(3):
+            time_start1 = time.time()
+            cur.execute(sql1)
+            time_end1 = time.time()
+            query_time1 = time_end1 - time_start1
+            middleTime.append(query_time1)
+
+        middleTime.sort()
+        totalQueryTime = - middleTime[1]
+        recordEachQueryTime.append(middleTime[1])
+        middleTime.clear()
+
+
+        #######################################     query2    #######################################
+
+        subjectNo_q2 = attributeToNoDict['subject']
+        whereSubject_q2 = 0
+        for key, value in currentSchema.items():
+            if subjectNo_q2 in value:
+                whereSubject_q2 = key
+                break
+
+        subjectTable_q2 = noToAttributeDict[whereSubject_q2]
+
+        sql2 = "select subject from %s where %s.key = 'Tor_Ahlsand'" % (subjectTable_q2, subjectTable_q2)
+
+        for t_i in range(3):
+            time_start2 = time.time()
+            cur.execute(sql2)
+            time_end2 = time.time()
+            query_time2 = time_end2 - time_start2
+            middleTime.append(query_time2)
+
+        middleTime.sort()
+        totalQueryTime -= middleTime[1]
+        recordEachQueryTime.append(middleTime[1])
+        middleTime.clear()
+
+
+        #######################################     query3    #######################################
+        # we can not test in example
+
+        birthDateNo_q3 = attributeToNoDict['birthDate']
+        activeYearsStartYearNo_q3 = attributeToNoDict['activeYearsStartYear']
+        activeYearsEndYearNo_q3 = attributeToNoDict['activeYearsEndYear']
+
+        whereBirthDateNo_q3 = 0
+        whereActiveYearsStartYearNo_q3 = 0
+        whereActiveYearsEndYearNo_q3 = 0
+
+        for key, value in currentSchema.items():
+            if birthDateNo_q3 in value:
+                whereBirthDateNo_q3 = key
+                break
+
+        for key, value in currentSchema.items():
+            if activeYearsStartYearNo_q3 in value:
+                whereActiveYearsStartYearNo_q3 = key
+                break
+
+        for key, value in currentSchema.items():
+            if activeYearsEndYearNo_q3 in value:
+                whereActiveYearsEndYearNo_q3 = key
+                break
+
+        birthDateTable_q3 = noToAttributeDict[whereBirthDateNo_q3]
+        activeYearsStartYearTable_q3 = noToAttributeDict[whereActiveYearsStartYearNo_q3]
+        activeYearsEndYearTable_q3 = noToAttributeDict[whereActiveYearsEndYearNo_q3]
+
+        # queryKey = 'Heath_Ledger'
+        if (whereBirthDateNo_q3 == whereActiveYearsStartYearNo_q3) or (
+                whereBirthDateNo_q3 == whereActiveYearsEndYearNo_q3):  # a==b or a==c
+            if whereActiveYearsStartYearNo_q3 == whereActiveYearsEndYearNo_q3:  # b==c e.g., (1,1,1)
+                sql3 = "select birthDate, activeYearsStartYear, activeYearsEndYear from %s where %s.key = 'Heath_Ledger'" % (
+                birthDateTable_q3, birthDateTable_q3)
+            else:
+                if (whereBirthDateNo_q3 == whereActiveYearsStartYearNo_q3) and (
+                        whereActiveYearsStartYearNo_q3 != whereActiveYearsEndYearNo_q3):  # a == b and b!=c  (1,1,2)
+                    sql3 = "select birthDate, activeYearsStartYear, activeYearsEndYear from %s, %s where %s.key = 'Heath_Ledger' and %s.key = %s.key" % (
+                    birthDateTable_q3, activeYearsEndYearTable_q3, birthDateTable_q3, birthDateTable_q3,
+                    activeYearsEndYearTable_q3)
+                else:  # a==c and b!=c (1,2,1)
+                    sql3 = "select birthDate, activeYearsStartYear, activeYearsEndYear from %s, %s where %s.key = 'Heath_Ledger' and %s.key = %s.key" % (
+                    birthDateTable_q3, activeYearsStartYearTable_q3, birthDateTable_q3, birthDateTable_q3,
+                    activeYearsStartYearTable_q3)
+        else:  # a!=b and a!=c
+            if whereActiveYearsStartYearNo_q3 != whereActiveYearsEndYearNo_q3:  # a!=b, a!=c, b!=c (1,2,3)
+                sql3 = "select birthDate, activeYearsStartYear, activeYearsEndYear from %s, %s, %s where %s.key = 'Heath_Ledger' and %s.key = %s.key and %s.key = %s.key" % (
+                birthDateTable_q3, activeYearsStartYearTable_q3, activeYearsEndYearTable_q3, birthDateTable_q3,
+                birthDateTable_q3, activeYearsStartYearTable_q3, birthDateTable_q3, activeYearsEndYearTable_q3)
+            if whereActiveYearsStartYearNo_q3 == whereActiveYearsEndYearNo_q3:  ##a!=b and a!=c and b==c (2,1,1)
+                sql3 = "select birthDate, activeYearsStartYear, activeYearsEndYear from %s, %s where %s.key = 'Heath_Ledger' and %s.key = %s.key" % (
+                birthDateTable_q3, activeYearsStartYearTable_q3, birthDateTable_q3, birthDateTable_q3,
+                activeYearsStartYearTable_q3)
+
+        for t_i in range(3):
+            time_start3 = time.time()
+            cur.execute(sql3)
+            time_end3 = time.time()
+            query_time3 = time_end3 - time_start3
+            middleTime.append(query_time3)
+
+        middleTime.sort()
+        totalQueryTime -= middleTime[1]
+        recordEachQueryTime.append(middleTime[1])
+        middleTime.clear()
+        #######################################     query4    #######################################
+
+        original_q4 = attributeToNoDict['original']
+        title_q4 = attributeToNoDict['title']
+        pageid_q4 = attributeToNoDict['pageid']
+
+        whereOriginal_q4 = 0
+        whereTitle_q4 = 0
+        wherePageid_q4 = 0
+
+        for key, value in currentSchema.items():
+            if original_q4 in value:
+                whereOriginal_q4 = key
+                break
+
+        for key, value in currentSchema.items():
+            if title_q4 in value:
+                whereTitle_q4 = key
+                break
+
+        for key, value in currentSchema.items():
+            if pageid_q4 in value:
+                wherePageid_q4 = key
+                break
+
+        originalTable_q4 = noToAttributeDict[whereOriginal_q4]
+        titleTable_q4 = noToAttributeDict[whereTitle_q4]
+        pageidTable_q4 = noToAttributeDict[wherePageid_q4]
+        queryKey_4 = 8484745
+        # queryKey_4 = 43757531 #example
+
+        if (whereOriginal_q4 == whereTitle_q4) or (whereOriginal_q4 == wherePageid_q4):  # a==b or a==c
+            if whereTitle_q4 == wherePageid_q4:  # b==c e.g., (1,1,1)
+                sql4 = "select original, title from %s where %s.pageid = %s" % (
+                originalTable_q4, originalTable_q4, queryKey_4)
+            else:
+                if (whereOriginal_q4 == whereTitle_q4) and (
+                        whereTitle_q4 != wherePageid_q4):  # a == b and b!=c  (1,1,2)
+                    sql4 = "select original, title from %s, %s where %s.pageid = %s and %s.objId = %s.objId" % (
+                    originalTable_q4, pageidTable_q4, pageidTable_q4, queryKey_4, originalTable_q4, pageidTable_q4)
+                else:  # a==c and b!=c (1,2,1)
+                    sql4 = "select original, title from %s, %s where %s.pageid = %s and %s.objId = %s.objId" % (
+                    originalTable_q4, titleTable_q4, originalTable_q4, queryKey_4, originalTable_q4, titleTable_q4)
+        else:  # a!=b and a!=c
+            if whereTitle_q4 != wherePageid_q4:  # a!=b, a!=c, b!=c (1,2,3)
+                sql4 = "select original, title from %s, %s, %s where %s.pageid = %s and %s.objId = %s.objId and %s.objId = %s.objId" % (
+                originalTable_q4, titleTable_q4, pageidTable_q4, pageidTable_q4, queryKey_4, originalTable_q4,
+                titleTable_q4, originalTable_q4, pageidTable_q4)
+            if whereTitle_q4 == wherePageid_q4:  ##a!=b and a!=c and b==c (2,1,1)
+                sql4 = "select original, title from %s, %s where %s.pageid = %s and %s.objId = %s.objId" % (
+                originalTable_q4, titleTable_q4, titleTable_q4, queryKey_4, originalTable_q4, titleTable_q4)
+
+
+        for t_i in range(3):
+            time_start4 = time.time()
+            cur.execute(sql4)
+            time_end4 = time.time()
+            query_time4 = time_end4 - time_start4
+            middleTime.append(query_time4)
+
+        middleTime.sort()
+        totalQueryTime -= middleTime[1]
+        recordEachQueryTime.append(middleTime[1])
+        middleTime.clear()
+
+
+        #######################################     query5    #######################################
+        birthYearNo_q5 = attributeToNoDict['birthYear']
+        nsNo_q5 = attributeToNoDict['ns']
+
+        whereBirthYear_q5 = 0
+        whereNs_q5 = 0
+
+        for key, value in currentSchema.items():
+            if birthYearNo_q5 in value:
+                whereBirthYear_q5 = key
+                break
+
+        for key, value in currentSchema.items():
+            if nsNo_q5 in value:
+                whereNs_q5 = key
+                break
+
+        BirthYearTable_q5 = noToAttributeDict[whereBirthYear_q5]
+        nsTable_q5 = noToAttributeDict[whereNs_q5]
+
+
+        sql5 = "select %s.key, birthYear, ns from arrayTable, %s, %s where arrayTable.key = 'normalized' and arrayTable.index = 0 and arrayTable.valStr = 'Sadako_Sasaki' and %s.objId = arrayTable.objId and %s.key = arrayTable.valStr" % (
+        BirthYearTable_q5, BirthYearTable_q5, nsTable_q5, nsTable_q5,
+        BirthYearTable_q5)  # Sadako_Sasaki     Henry_Standing_Bear（example）
+
+        for t_i in range(3):
+            time_start5 = time.time()
+            cur.execute(sql5)
+            time_end5 = time.time()
+            query_time5 = time_end5 - time_start5
+            middleTime.append(query_time5)
+
+        middleTime.sort()
+        totalQueryTime -= middleTime[1]
+        recordEachQueryTime.append(middleTime[1])
+        middleTime.clear()
+
+
+
+
+        self.modifyui.plainTextEdit_TimeConsumption.setPlainText('{}'.format(str(-totalQueryTime)))
+
+
+
+        ##################################################################
+        #get space consumption
+        #############################################################################
+        sql_space = "select sum(DATA_LENGTH)+sum(INDEX_LENGTH) from information_schema.tables where table_schema='QLearning';"
+        cur.execute(sql_space)
+        results = cur.fetchall()  # get the return result
+        displayResults = ""
+        for rel in results:
+            displayResults = displayResults + str(rel) + '\n'
+        self.modifyui.plainTextEdit_SpaceConsumption.setPlainText('{}'.format(displayResults))
+
+
+
+
+
+        
+
+
+
+        # conn.close() close database connection
+        conn.close()
+
+    #
+    # # Optimal Schema ----  Button
+    # def openOptimalDialog(self):
+    #     qfile_Dialog = QFile('optimalSchemaDiag.ui')
+    #     qfile_Dialog.open(QFile.ReadOnly)
+    #     qfile_Dialog.close()
+    #     self.optimalui = QUiLoader().load(qfile_Dialog)
+    #     self.optimalui.show()

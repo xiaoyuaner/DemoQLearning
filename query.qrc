@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="query">
+    <file>query.png</file>
+  </qresource>
+</RCC>

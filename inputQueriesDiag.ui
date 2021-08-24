@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_loadMultiModleFile</class>
+ <widget class="QDialog" name="Dialog_loadMultiModleFile">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>675</width>
+    <height>951</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Input Query workload</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QDialog{
+	background-color: rgb(255, 255, 255);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_4">
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
+     </property>
+     <property name="leftMargin">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <property name="rightMargin">
+      <number>0</number>
+     </property>
+     <property name="bottomMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_logp">
+       <item>
+        <widget class="QLabel" name="label_logo">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>149</horstretch>
+           <verstretch>104</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>149</width>
+           <height>104</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>149</width>
+           <height>104</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap>logo.png</pixmap>
+         </property>
+         <property name="scaledContents">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_mortal">
+       <item>
+        <widget class="QLabel" name="label_mortal">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="font">
+          <font>
+           <family>.SF NS Text</family>
+           <pointsize>24</pointsize>
+           <weight>75</weight>
+           <italic>false</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="text">
+          <string>Mortal</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QLabel" name="label_8">
+         <property name="text">
+          <string>Current Attributes:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="listWidget_notoAttributes">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>710</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>710</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Query 1:</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEdit_query1">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>71</height>
+            </size>
+           </property>
+           <property name="plainText">
+            <string>sql1 = &quot;select pageid from arrayTable, %s where arrayTable.key = 'normalized' and arrayTable.index = 0 and arrayTable.valStr = 'Doris_Brougham' and %s.objId = arrayTable.objId&quot; % ( pagidTable_q1, pagidTable_q1)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Query 2:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit_query2">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>71</height>
+          </size>
+         </property>
+         <property name="plainText">
+          <string>&quot;select subject from %s where %s.key = 'Tor_Ahlsand'&quot; % (subjectTable_q2, subjectTable_q2)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Query 3:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit_query3">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>71</height>
+          </size>
+         </property>
+         <property name="plainText">
+          <string>sql3 = &quot;select birthDate, activeYearsStartYear, activeYearsEndYear from %s where %s.key = 'Heath_Ledger'&quot; % (birthDateTable_q3, birthDateTable_q3)
+sql3 = &quot;select birthDate, activeYearsStartYear, activeYearsEndYear from %s, %s where %s.key = 'Heath_Ledger' and %s.key = %s.key&quot; % (birthDateTable_q3, activeYearsEndYearTable_q3, birthDateTable_q3, birthDateTable_q3, activeYearsEndYearTable_q3)
+sql3 = &quot;select birthDate, activeYearsStartYear, activeYearsEndYear from %s, %s, %s where %s.key = 'Heath_Ledger' and %s.key = %s.key and %s.key = %s.key&quot; % (birthDateTable_q3, activeYearsStartYearTable_q3, activeYearsEndYearTable_q3, birthDateTable_q3, birthDateTable_q3, activeYearsStartYearTable_q3, birthDateTable_q3, activeYearsEndYearTable_q3)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Query 4:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit_query4">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>71</height>
+          </size>
+         </property>
+         <property name="plainText">
+          <string>sql4 = &quot;select original, title from %s where %s.pageid = %s&quot; % (originalTable_q4, originalTable_q4, queryKey_4)
+sql4 = &quot;select original, title from %s, %s where %s.pageid = %s and %s.objId = %s.objId&quot; % (originalTable_q4, pageidTable_q4, pageidTable_q4, queryKey_4, originalTable_q4, pageidTable_q4)
+sql4 = &quot;select original, title from %s, %s, %s where %s.pageid = %s and %s.objId = %s.objId and %s.objId = %s.objId&quot; % (originalTable_q4, titleTable_q4, pageidTable_q4, pageidTable_q4, queryKey_4, originalTable_q4, titleTable_q4, originalTable_q4, pageidTable_q4)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Query 5:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit_query5">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>71</height>
+          </size>
+         </property>
+         <property name="plainText">
+          <string>sql5 = &quot;select %s.key, birthYear, ns from arrayTable, %s, %s where arrayTable.key = 'normalized' and arrayTable.index = 0 and arrayTable.valStr = 'Sadako_Sasaki' and %s.objId = arrayTable.objId and %s.key = arrayTable.valStr&quot; % (BirthYearTable_q5, BirthYearTable_q5, nsTable_q5, nsTable_q5, BirthYearTable_q5)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Query 6:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit_query6">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>71</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Query 7:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit_query7">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>71</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog_loadMultiModleFile</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog_loadMultiModleFile</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

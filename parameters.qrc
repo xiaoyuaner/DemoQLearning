@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="parameter">
+    <file>parameters.png</file>
+  </qresource>
+</RCC>
